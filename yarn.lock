@@ -531,25 +531,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@pier-wallet/mpc-client@1.1.7-module-test.9":
-  version "1.1.7-module-test.9"
-  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-client/-/mpc-client-1.1.7-module-test.9.tgz#05b8ed8b516afa8e6c98de863a37b37c6f1c26d1"
-  integrity sha512-eTvukMptf6lVxeODqEowMO0OVRpHCvN578qK6gj8800b4i/WVfTuwQaBtU05lvNCbrQH5Ut5LS5HKFVqQarQGQ==
+"@pier-wallet/mpc-lib@^0.0.12-cjs.4":
+  version "0.0.12-cjs.4"
+  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-lib/-/mpc-lib-0.0.12-cjs.4.tgz#360904dd09a80330aae275af015d3260a9f9efe3"
+  integrity sha512-+fLBaVHQLL5zKztycfXUKrXRU5DDaupE/OUtDfWEmfEcuRS4tprm56P5bLRgZmwtM/CWKeGz8zhsi2+mO8j2NA==
   dependencies:
-    "@pier-wallet/mpc-ecdsa-wasm" "^0.1.0"
-    events "^3.3.0"
-
-"@pier-wallet/mpc-ecdsa-wasm@^0.1.0":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-ecdsa-wasm/-/mpc-ecdsa-wasm-0.1.1.tgz#1c58337e27a3a543f277d6cbb2a67d403213d389"
-  integrity sha512-E9ntyxdCVEb7B75k60uThrgBZ1Kb+TMC0d5lIGURs1lnX0zPcauHuxkCzUa9NWO/7WaV8clsXgSYT6z53lkDGQ==
-
-"@pier-wallet/mpc-lib@0.0.12":
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-lib/-/mpc-lib-0.0.12.tgz#4568ebbbf909e803e3dc2c932f0b7c462b4b2608"
-  integrity sha512-3fgKRJTiMxQmDWcPM0xP3+piAZa+Kv6EYGfn01TWk7d28Uqh8eKhSTHuJIFSSKLqtPx/NOxxF0Uf93LmsWX/aA==
-  dependencies:
-    "@pier-wallet/mpc-client" "1.1.7-module-test.9"
     ethers "^5.7.0"
     ts-essentials "^9.3.2"
 
@@ -1092,11 +1078,6 @@ ethers@^5.7.0:
     "@ethersproject/web" "5.7.1"
     "@ethersproject/wordlists" "5.7.0"
 
-events@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/events/-/events-3.3.0.tgz#31a95ad0a924e2d2c419a813aeb2c4e878ea7400"
-  integrity sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==
-
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
@@ -1384,7 +1365,7 @@ merge2@^1.3.0, merge2@^1.4.1:
   resolved "https://registry.yarnpkg.com/merge2/-/merge2-1.4.1.tgz#4368892f885e907455a6fd7dc55c0c9d404990ae"
   integrity sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==
 
-micromatch@^4.0.4:
+micromatch@^4.0.4, micromatch@^4.0.5:
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/micromatch/-/micromatch-4.0.5.tgz#bc8999a7cbbf77cdc89f132f6e467051b49090c6"
   integrity sha512-DMy+ERcEW2q8Z2Po+WNXuw3c5YaUSFjAO5GsJqfEl7UjvtIuFKO6ZrKvcItdy98dwFI2N1tg3zNIdKaQT+aNdA==
@@ -1669,6 +1650,13 @@ uri-js@^4.2.2:
   integrity sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==
   dependencies:
     punycode "^2.1.0"
+
+vite-plugin-singlefile@0.13.5:
+  version "0.13.5"
+  resolved "https://registry.yarnpkg.com/vite-plugin-singlefile/-/vite-plugin-singlefile-0.13.5.tgz#9465dbb0b06afb2a73600a50fcce4b51c8d10999"
+  integrity sha512-y/aRGh8qHmw2f1IhaI/C6PJAaov47ESYDvUv1am1YHMhpY+19B5k5Odp8P+tgs+zhfvak6QB1ykrALQErEAo7g==
+  dependencies:
+    micromatch "^4.0.5"
 
 vite@^4.4.5:
   version "4.4.9"

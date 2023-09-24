@@ -1,9 +1,10 @@
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig } from "vite";
+import { viteSingleFile } from "vite-plugin-singlefile";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), viteSingleFile()],
   optimizeDeps: {
     exclude: ["@pier-wallet/mpc-ecdsa-wasm"],
   },
