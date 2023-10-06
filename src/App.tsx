@@ -1,50 +1,37 @@
-import {
-  PierMpcTransport,
-  PierMpcWallet,
-  SessionKind,
-  WebSocketClient,
-} from "@pier-wallet/mpc-lib";
+import { PierMpcWallet, SessionKind } from "@pier-wallet/mpc-lib";
+import { createPierMpcSdkWasm } from "@pier-wallet/mpc-lib/wasm";
 import { ethers } from "ethers";
 import { useState } from "react";
 
-const PIER_MPC_SERVER_URL = "ws://localhost:3030/mpc"; // TODO: replace with pier MPC server URL
-
-const websocket = new WebSocketClient();
-websocket.connect(PIER_MPC_SERVER_URL);
+const PIER_MPC_SERVER_URL = "ws://127.0.0.1:3030/mpc"; // TODO: replace with pier MPC server URL
+const pierMpcSdk = createPierMpcSdkWasm(PIER_MPC_SERVER_URL);
 
 export default function App() {
   const [wallet, setWallet] = useState<PierMpcWallet | null>(null);
   const [signature, setSignature] = useState<string | null>(null);
 
   async function establishConnection<T extends SessionKind>(sessionKind: T) {
-    // will create a new groupID & sessionID
-    const { groupId, sessionId } = await api.createGroup({
+    const { sessionId } = await api.createSession({
       sessionKind,
     });
-    const transport = await PierMpcTransport.establishConnection(
-      websocket,
-      sessionKind,
-      {
-        type: "join",
-        groupId,
-        sessionId,
-      }
-    );
+    const transport = await pierMpcSdk.establishConnection(sessionKind, {
+      type: "join",
+      sessionId,
+    });
     return transport;
   }
 
   const generateKeyShare = async () => {
-    const transport = await establishConnection(SessionKind.KEYGEN);
+    const connection = await establishConnection(SessionKind.KEYGEN);
     api
       .generateKeyShare({
-        groupId: transport.group.uuid,
-        sessionId: transport.session.uuid,
+        sessionId: connection.sessionId,
       })
       .then(() => console.log("server finished generating key share"));
-    const keyShare = await PierMpcWallet.generateKeyShare(transport);
-    const wallet = new PierMpcWallet(
+    const keyShare = await pierMpcSdk.generateKeyShare(connection);
+    const wallet = pierMpcSdk.walletFromKeyShare(
       keyShare,
-      await establishConnection(SessionKind.SIGN)
+      await establishConnection(SessionKind.SIGN),
     );
     console.log("local key share generated.", wallet.address);
     setWallet(wallet);
@@ -61,8 +48,7 @@ export default function App() {
       .signMessage({
         signerAddress: wallet.address,
         message,
-        groupId: wallet.transport.group.uuid,
-        sessionId: wallet.transport.session.uuid,
+        sessionId: wallet.connection.sessionId,
       })
       .then(() => console.log("server finished signing message"));
     const signature = await wallet.signMessage(message);
@@ -73,7 +59,7 @@ export default function App() {
       message,
       recoveredAddress,
       wallet.address,
-      recoveredAddress.toLowerCase() === wallet.address.toLowerCase()
+      recoveredAddress.toLowerCase() === wallet.address.toLowerCase(),
     );
     setSignature(signature);
   };
@@ -81,7 +67,7 @@ export default function App() {
   return (
     <>
       <h1>Pier Wallet MPC Demo</h1>
-      <h2>Step 1: Create connection & Join Group</h2>
+      <h2>Step 1: Create connection & Join Session</h2>
       {wallet && <p>Wallet address: {wallet.address}</p>}
       <button onClick={generateKeyShare}>Create first share of wallet</button>
       <button onClick={signMessage}>Sign message</button>
@@ -90,30 +76,31 @@ export default function App() {
   );
 }
 
+type SessionInfo = {
+  sessionId: string;
+};
+
 class Api {
   constructor(private readonly apiUrl: string) {}
 
-  async createGroup({
+  async createSession({
     sessionKind,
   }: {
     sessionKind: SessionKind;
-  }): Promise<{ groupId: string; sessionId: string }> {
-    const { groupId, sessionId } = await fetch(
-      `${this.apiUrl}/createGroupAndSession`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          sessionKind,
-        }),
-      }
-    ).then((res) => res.json());
-    return { groupId, sessionId };
+  }): Promise<SessionInfo> {
+    const { sessionId } = await fetch(`${this.apiUrl}/createSession`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        sessionKind,
+      }),
+    }).then((res) => res.json());
+    return { sessionId };
   }
 
-  async generateKeyShare(data: { groupId: string; sessionId: string }) {
+  async generateKeyShare(data: SessionInfo) {
     await fetch(`${this.apiUrl}/generateKeyShare`, {
       method: "POST",
       headers: {
@@ -123,12 +110,12 @@ class Api {
     });
   }
 
-  async signMessage(data: {
-    signerAddress: string;
-    message: string;
-    groupId: string;
-    sessionId: string;
-  }) {
+  async signMessage(
+    data: {
+      signerAddress: string;
+      message: string;
+    } & SessionInfo,
+  ) {
     await fetch(`${this.apiUrl}/signMessage`, {
       method: "POST",
       headers: {
