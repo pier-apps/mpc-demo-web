@@ -3,8 +3,9 @@ import { createPierMpcSdkWasm } from "@pier-wallet/mpc-lib/wasm";
 import { ethers } from "ethers";
 import { useState } from "react";
 
-const PIER_MPC_SERVER_URL = "ws://127.0.0.1:3030/mpc"; // TODO: replace with pier MPC server URL
-const pierMpcSdk = createPierMpcSdkWasm(PIER_MPC_SERVER_URL);
+const PIER_MPC_SERVER_HTTP_URL = "http://localhost:3030";
+const PIER_MPC_SERVER_WS_URL = "ws://127.0.0.1:3030/mpc"; // TODO: replace with pier MPC server URL
+const pierMpcSdk = createPierMpcSdkWasm(PIER_MPC_SERVER_WS_URL);
 
 export default function App() {
   const [wallet, setWallet] = useState<PierMpcWallet | null>(null);
@@ -126,4 +127,4 @@ class Api {
   }
 }
 
-const api = new Api("http://localhost:8080");
+const api = new Api(PIER_MPC_SERVER_HTTP_URL);

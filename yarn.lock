@@ -531,26 +531,19 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@pier-wallet/mpc-client@^1.1.15-newWsServer.0":
-  version "1.1.15-newWsServer.0"
-  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-client/-/mpc-client-1.1.15-newWsServer.0.tgz#713f2a35737b4cbb6d3e424a5f3ee3ef2defbbdf"
-  integrity sha512-bvNQUV2yjGq3WpeMi7Kj17rqaTsbroiw5Xk28/yplYUpBp0y9EQKlN0yKIdgVHFjDy8GTHiUdtqzS/LBA/vcbA==
-  dependencies:
-    "@pier-wallet/mpc-ecdsa-wasm" "0.1.3"
-    events "^3.3.0"
+"@pier-wallet/mpc-ecdsa-wasm@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-ecdsa-wasm/-/mpc-ecdsa-wasm-0.1.4.tgz#feab920c795978f31498a04db16fad652bfb9b64"
+  integrity sha512-7peqvhBy8CXuGWiwk3+DZz0M/wvCO8D0XmGGNLXduXsuHK/PCOPoiHGAlYxzSEOFI+g7VHs+gPXIpwzw2Lf5xg==
 
-"@pier-wallet/mpc-ecdsa-wasm@0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-ecdsa-wasm/-/mpc-ecdsa-wasm-0.1.3.tgz#a6241bb86194fcbe26f0fb3c86e3eecd40c6ed65"
-  integrity sha512-rD/XRGVMEaZbIcolYEQrr/nrrUwrCRmYignaaFowziTFL1GWBHAwBnpE86HFmX/Xn+BirF3YWMW1EoY3RCIUbg==
-
-"@pier-wallet/mpc-lib@^0.0.14-newWsServer.0":
-  version "0.0.14-newWsServer.0"
-  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-lib/-/mpc-lib-0.0.14-newWsServer.0.tgz#2948a7c25b9decb632f822bf4be2ae85c9ed31f7"
-  integrity sha512-x8OVUfsfeOv/KBmhTR6qeEuu2CTihZOmUX66deKsQ0wHhMi+TCxnt0BobHEBvNq0/rVNWI5NppqtY0YdZIJRhQ==
+"@pier-wallet/mpc-lib@^0.0.14-newWsServer.1":
+  version "0.0.14-newWsServer.1"
+  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-lib/-/mpc-lib-0.0.14-newWsServer.1.tgz#899a8c09fb3d55deb9d182ac62244421a0d36133"
+  integrity sha512-0mu/Q6mCxPBzdGJkcYrQDcYpPJ2Q++0XgfLG9/tmkc0ndL9I6z7IcuupciW1eeCG+Y3nTThjRA/kD4zwWhDTrA==
   dependencies:
-    "@pier-wallet/mpc-client" "^1.1.15-newWsServer.0"
+    "@pier-wallet/mpc-ecdsa-wasm" "^0.1.4"
     ethers "^5.7.0"
+    events "^3.3.0"
     ts-essentials "^9.3.2"
     zod "^3.22.4"
 
