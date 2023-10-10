@@ -536,10 +536,10 @@
   resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-ecdsa-wasm/-/mpc-ecdsa-wasm-0.1.4.tgz#feab920c795978f31498a04db16fad652bfb9b64"
   integrity sha512-7peqvhBy8CXuGWiwk3+DZz0M/wvCO8D0XmGGNLXduXsuHK/PCOPoiHGAlYxzSEOFI+g7VHs+gPXIpwzw2Lf5xg==
 
-"@pier-wallet/mpc-lib@^0.0.14-newWsServer.1":
-  version "0.0.14-newWsServer.1"
-  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-lib/-/mpc-lib-0.0.14-newWsServer.1.tgz#899a8c09fb3d55deb9d182ac62244421a0d36133"
-  integrity sha512-0mu/Q6mCxPBzdGJkcYrQDcYpPJ2Q++0XgfLG9/tmkc0ndL9I6z7IcuupciW1eeCG+Y3nTThjRA/kD4zwWhDTrA==
+"@pier-wallet/mpc-lib@^0.0.14-newWsServer.6":
+  version "0.0.14-newWsServer.6"
+  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-lib/-/mpc-lib-0.0.14-newWsServer.6.tgz#8c8a848e8d6992f909ef1808930fc31ec98c397d"
+  integrity sha512-8QFclfTDi+0mZBMcAbeoe6Ha+rDnbpAXenJBXdqn0YFZEft7uvRep381jRZxiV2bbiyCSO9O95xCFLYQ7omFUA==
   dependencies:
     "@pier-wallet/mpc-ecdsa-wasm" "^0.1.4"
     ethers "^5.7.0"
