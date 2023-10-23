@@ -1,5 +1,6 @@
-import { PierMpcWallet, SessionKind } from "@pier-wallet/mpc-lib";
-import { PierBitcoinMpcWallet } from "@pier-wallet/mpc-lib/bitcoin";
+import { SessionKind } from "@pier-wallet/mpc-lib";
+import { PierMpcBitcoinWallet } from "@pier-wallet/mpc-lib/bitcoin";
+import { PierMpcEthereumWallet } from "@pier-wallet/mpc-lib/ethers-v5";
 import { createPierMpcSdkWasm } from "@pier-wallet/mpc-lib/wasm";
 import { ethers } from "ethers";
 import { useState } from "react";
@@ -15,10 +16,12 @@ const pierMpcSdk = createPierMpcSdkWasm({
 });
 
 export default function App() {
-  const [ethWallet, setEthWallet] = useState<PierMpcWallet | null>(null);
+  const [ethWallet, setEthWallet] = useState<PierMpcEthereumWallet | null>(
+    null,
+  );
   const [ethSignature, setEthSignature] = useState<string | null>(null);
 
-  const [btcWallet, setBtcWallet] = useState<PierBitcoinMpcWallet | null>(null);
+  const [btcWallet, setBtcWallet] = useState<PierMpcBitcoinWallet | null>(null);
   const [btcTxHash, setBtcTxHash] = useState<string | null>(null);
 
   async function establishConnection<T extends SessionKind>(sessionKind: T) {
@@ -45,8 +48,12 @@ export default function App() {
       );
     const keyShare = await pierMpcSdk.generateKeyShare(connection);
     const signConnection = await establishConnection(SessionKind.SIGN);
-    const wallet = pierMpcSdk.walletFromKeyShare(keyShare, signConnection);
-    const btcWallet = new PierBitcoinMpcWallet(
+    const ethWallet = new PierMpcEthereumWallet(
+      keyShare,
+      signConnection,
+      pierMpcSdk,
+    );
+    const btcWallet = new PierMpcBitcoinWallet(
       keyShare,
       "testnet",
       signConnection,
@@ -54,10 +61,10 @@ export default function App() {
     );
     console.log(
       "local key share generated.",
-      wallet.address,
+      ethWallet.address,
       btcWallet.address.toString(),
     );
-    setEthWallet(wallet);
+    setEthWallet(ethWallet);
     setBtcWallet(btcWallet);
   };
 
