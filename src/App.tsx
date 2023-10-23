@@ -2,14 +2,12 @@ import { PierMpcWallet, SessionKind } from "@pier-wallet/mpc-lib";
 import { createPierMpcSdkWasm } from "@pier-wallet/mpc-lib/wasm";
 import { ethers } from "ethers";
 import { useState } from "react";
-
-const PIER_MPC_SERVER_HTTP_URL =
-  "https://mpc-server-7ca971e09088.herokuapp.com";
+import { api } from "./trpc";
 
 const supabaseTestUser = {
-  id: "f185139b-6e22-4911-8ab1-0b1dfbc04802",
+  id: "11062eb7-60ad-493c-84b6-116bdda7a7c3",
   email: "mpc-lib-test@example.com",
-  password: "1234",
+  password: "123456",
 };
 const pierMpcSdk = createPierMpcSdkWasm({
   credentials: supabaseTestUser,
@@ -20,7 +18,7 @@ export default function App() {
   const [signature, setSignature] = useState<string | null>(null);
 
   async function establishConnection<T extends SessionKind>(sessionKind: T) {
-    const { sessionId } = await api.createSession({
+    const { sessionId } = await api.createSession.mutate({
       sessionKind,
     });
     const transport = await pierMpcSdk.establishConnection(sessionKind, {
@@ -32,11 +30,15 @@ export default function App() {
 
   const generateKeyShare = async () => {
     const connection = await establishConnection(SessionKind.KEYGEN);
-    api
-      .generateKeyShare({
+    api.generateKeyShare
+      .mutate({
         sessionId: connection.sessionId,
       })
-      .then(() => console.log("server finished generating key share"));
+      .then((res: unknown) =>
+        console.log(
+          `server finished generating key share: "${JSON.stringify(res)}"`,
+        ),
+      );
     const keyShare = await pierMpcSdk.generateKeyShare(connection);
     const wallet = pierMpcSdk.walletFromKeyShare(
       keyShare,
@@ -53,8 +55,8 @@ export default function App() {
     }
 
     const message = "hello world";
-    api
-      .signMessage({
+    api.signMessage
+      .mutate({
         signerAddress: wallet.address,
         message,
         sessionId: wallet.connection.sessionId,
@@ -84,56 +86,3 @@ export default function App() {
     </>
   );
 }
-
-type SessionInfo = {
-  sessionId: string;
-};
-
-class Api {
-  constructor(private readonly apiUrl: string) {}
-
-  async createSession({
-    sessionKind,
-  }: {
-    sessionKind: SessionKind;
-  }): Promise<SessionInfo> {
-    const { sessionId } = await fetch(`${this.apiUrl}/createSession`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        sessionKind,
-        allowedUserIds: [supabaseTestUser.id],
-      }),
-    }).then((res) => res.json());
-    return { sessionId };
-  }
-
-  async generateKeyShare(data: SessionInfo) {
-    await fetch(`${this.apiUrl}/generateKeyShare`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-  }
-
-  async signMessage(
-    data: {
-      signerAddress: string;
-      message: string;
-    } & SessionInfo,
-  ) {
-    await fetch(`${this.apiUrl}/signMessage`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-  }
-}
-
-const api = new Api(PIER_MPC_SERVER_HTTP_URL);
