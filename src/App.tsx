@@ -1,4 +1,5 @@
 import { PierMpcWallet, SessionKind } from "@pier-wallet/mpc-lib";
+import { PierBitcoinMpcWallet } from "@pier-wallet/mpc-lib/bitcoin";
 import { createPierMpcSdkWasm } from "@pier-wallet/mpc-lib/wasm";
 import { ethers } from "ethers";
 import { useState } from "react";
@@ -14,8 +15,11 @@ const pierMpcSdk = createPierMpcSdkWasm({
 });
 
 export default function App() {
-  const [wallet, setWallet] = useState<PierMpcWallet | null>(null);
-  const [signature, setSignature] = useState<string | null>(null);
+  const [ethWallet, setEthWallet] = useState<PierMpcWallet | null>(null);
+  const [ethSignature, setEthSignature] = useState<string | null>(null);
+
+  const [btcWallet, setBtcWallet] = useState<PierBitcoinMpcWallet | null>(null);
+  const [btcTxHash, setBtcTxHash] = useState<string | null>(null);
 
   async function establishConnection<T extends SessionKind>(sessionKind: T) {
     const { sessionId } = await api.createSession.mutate({
@@ -40,16 +44,25 @@ export default function App() {
         ),
       );
     const keyShare = await pierMpcSdk.generateKeyShare(connection);
-    const wallet = pierMpcSdk.walletFromKeyShare(
+    const signConnection = await establishConnection(SessionKind.SIGN);
+    const wallet = pierMpcSdk.walletFromKeyShare(keyShare, signConnection);
+    const btcWallet = new PierBitcoinMpcWallet(
       keyShare,
-      await establishConnection(SessionKind.SIGN),
+      "testnet",
+      signConnection,
+      pierMpcSdk,
     );
-    console.log("local key share generated.", wallet.address);
-    setWallet(wallet);
+    console.log(
+      "local key share generated.",
+      wallet.address,
+      btcWallet.address.toString(),
+    );
+    setEthWallet(wallet);
+    setBtcWallet(btcWallet);
   };
 
-  const signMessage = async () => {
-    if (!wallet) {
+  const signMessageWithEth = async () => {
+    if (!ethWallet) {
       console.error("wallet not generated");
       return;
     }
@@ -57,32 +70,75 @@ export default function App() {
     const message = "hello world";
     api.signMessage
       .mutate({
-        signerAddress: wallet.address,
+        signerAddress: ethWallet.address,
         message,
-        sessionId: wallet.connection.sessionId,
+        sessionId: ethWallet.connection.sessionId,
       })
       .then(() => console.log("server finished signing message"));
-    const signature = await wallet.signMessage(message);
+    const signature = await ethWallet.signMessage(message);
     console.log(`local signature generated: ${signature}`);
     const recoveredAddress = ethers.utils.verifyMessage(message, signature);
     console.log(
       "signature verification:",
       message,
       recoveredAddress,
-      wallet.address,
-      recoveredAddress.toLowerCase() === wallet.address.toLowerCase(),
+      ethWallet.address,
+      recoveredAddress.toLowerCase() === ethWallet.address.toLowerCase(),
     );
-    setSignature(signature);
+    setEthSignature(signature);
+  };
+
+  const sendBitcoinTransaction = async () => {
+    const faucetAddress = "tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6";
+
+    if (!btcWallet) {
+      console.error("wallet not generated");
+      return;
+    }
+    const tx = await btcWallet.createTransaction({
+      to: faucetAddress,
+      value: 800n,
+      feePerByte: 1n,
+    });
+    api.bitcoin.sendTransaction
+      .mutate({
+        sessionId: btcWallet.connection.sessionId,
+        signerAddress: ethWallet!.address,
+        transaction: tx.toObject(),
+      })
+      .then((res: unknown) =>
+        console.log(
+          `server finished sending transaction: "${JSON.stringify(res)}"`,
+        ),
+      );
+    const hash = await btcWallet.sendTransaction(tx);
+    setBtcTxHash(hash);
+    console.log("btc hash", hash);
   };
 
   return (
     <>
       <h1>Pier Wallet MPC Demo</h1>
       <h2>Step 1: Create connection & Join Session</h2>
-      {wallet && <p>Wallet address: {wallet.address}</p>}
-      <button onClick={generateKeyShare}>Create first share of wallet</button>
-      <button onClick={signMessage}>Sign message</button>
-      {signature && <p>Signature: {signature}</p>}
+      {
+        <p>
+          Wallet addresses
+          <br />
+          ETH: {ethWallet?.address}
+          <br />
+          BTC: {btcWallet?.address.toString()}
+        </p>
+      }
+      <button onClick={generateKeyShare}>Create wallet</button>
+      <p>
+        <button onClick={signMessageWithEth}>Sign message</button>
+        ETH Signature: {ethSignature}
+      </p>
+
+      <p>
+        <button onClick={sendBitcoinTransaction}>Send BTC to faucet</button>
+        BTC tx hash: {btcTxHash}
+      </p>
     </>
   );
 }
