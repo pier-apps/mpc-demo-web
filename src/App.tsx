@@ -5,7 +5,15 @@ import { useState } from "react";
 
 const PIER_MPC_SERVER_HTTP_URL =
   "https://mpc-server-7ca971e09088.herokuapp.com";
-const pierMpcSdk = createPierMpcSdkWasm();
+
+const supabaseTestUser = {
+  id: "f185139b-6e22-4911-8ab1-0b1dfbc04802",
+  email: "mpc-lib-test@example.com",
+  password: "1234",
+};
+const pierMpcSdk = createPierMpcSdkWasm({
+  credentials: supabaseTestUser,
+});
 
 export default function App() {
   const [wallet, setWallet] = useState<PierMpcWallet | null>(null);
@@ -96,6 +104,7 @@ class Api {
       },
       body: JSON.stringify({
         sessionKind,
+        allowedUserIds: [supabaseTestUser.id],
       }),
     }).then((res) => res.json());
     return { sessionId };
