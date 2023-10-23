@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@pier-wallet/mpc-lib": "0.0.17-bitcoin.2",
+    "@pier-wallet/mpc-lib": "0.0.17-bitcoin.3",
     "@supabase/supabase-js": "^2.38.2",
     "@trpc/client": "10.37.1",
     "@trpc/server": "10.37.1",

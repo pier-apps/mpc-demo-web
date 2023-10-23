@@ -541,10 +541,10 @@
   resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-ecdsa-wasm/-/mpc-ecdsa-wasm-0.1.6.tgz#e33ee7e8cfc0affd09f09fb4a4ffb51563cc2071"
   integrity sha512-xLEbAElSBygxFeQaxTn+8DQNvtZfQy9htyg3RDBeGbL3CAWAjnYKOheYaMPgINMQS7d8Hlo3AdILW6tHg3iSeg==
 
-"@pier-wallet/mpc-lib@0.0.17-bitcoin.2":
-  version "0.0.17-bitcoin.2"
-  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-lib/-/mpc-lib-0.0.17-bitcoin.2.tgz#04bce718316615d734002a28c0afa8dc066da09c"
-  integrity sha512-SHfUsg9zEO1cFxukX8GZOogaGJjF1sBSSg5wTNJvMCi8iGx0Ze1voS14drXSIP3WcpS/TO7kNphJ5p98yDgA3A==
+"@pier-wallet/mpc-lib@0.0.17-bitcoin.3":
+  version "0.0.17-bitcoin.3"
+  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-lib/-/mpc-lib-0.0.17-bitcoin.3.tgz#4d0f09d8213e966d804f259855ad0ce0e5ddb70b"
+  integrity sha512-sgyN2H3J3CNH4WJw+fI5HhAjWJvb8m7nAv99mJ5c7V1InukfSrXxZ7HTZlwb0mLmg1nfAARSgvTVI2nOan6WtQ==
   dependencies:
     "@pier-wallet/mpc-ecdsa-wasm" "^0.1.6"
     "@supabase/supabase-js" "^2.38.0"

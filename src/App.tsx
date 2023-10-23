@@ -77,7 +77,7 @@ export default function App() {
     const message = "hello world";
     api.signMessage
       .mutate({
-        signerAddress: ethWallet.address,
+        publicKey: ethWallet.keyShare.publicKey,
         message,
         sessionId: ethWallet.connection.sessionId,
       })
@@ -110,7 +110,7 @@ export default function App() {
     api.bitcoin.sendTransaction
       .mutate({
         sessionId: btcWallet.connection.sessionId,
-        signerAddress: ethWallet!.address,
+        publicKey: btcWallet.keyShare.publicKey,
         transaction: tx.toObject(),
       })
       .then((res: unknown) =>
