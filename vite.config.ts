@@ -1,10 +1,10 @@
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig } from "vite";
-import { viteSingleFile } from "vite-plugin-singlefile";
+import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), viteSingleFile()],
+  plugins: [react(), nodePolyfills()],
   optimizeDeps: {
     exclude: ["@pier-wallet/mpc-ecdsa-wasm"],
   },
