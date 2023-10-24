@@ -1,10 +1,16 @@
-import { SessionKind } from "@pier-wallet/mpc-lib";
+import { type KeyShare, SessionKind } from "@pier-wallet/mpc-lib";
 import { PierMpcBitcoinWallet } from "@pier-wallet/mpc-lib/bitcoin";
 import { PierMpcEthereumWallet } from "@pier-wallet/mpc-lib/ethers-v5";
 import { createPierMpcSdkWasm } from "@pier-wallet/mpc-lib/wasm";
 import { ethers } from "ethers";
 import { useState } from "react";
 import { api } from "./trpc";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
+import { useLocalStorage } from "usehooks-ts";
 
 const supabaseTestUser = {
   id: "11062eb7-60ad-493c-84b6-116bdda7a7c3",
@@ -15,14 +21,40 @@ const pierMpcSdk = createPierMpcSdkWasm({
   credentials: supabaseTestUser,
 });
 
-export default function App() {
-  const [ethWallet, setEthWallet] = useState<PierMpcEthereumWallet | null>(
+function App() {
+  const [keyShare, setKeyShare] = useLocalStorage<KeyShare | null>(
+    "keyShare",
     null,
   );
-  const [ethSignature, setEthSignature] = useState<string | null>(null);
 
-  const [btcWallet, setBtcWallet] = useState<PierMpcBitcoinWallet | null>(null);
+  const [ethSignature, setEthSignature] = useState<string | null>(null);
   const [btcTxHash, setBtcTxHash] = useState<string | null>(null);
+
+  const wallets = useQuery({
+    queryKey: ["keyShare", keyShare?.publicKey],
+    queryFn: async () => {
+      if (!keyShare) {
+        return null;
+      }
+      const signConnection = await establishConnection(SessionKind.SIGN);
+      const ethWallet = new PierMpcEthereumWallet(
+        keyShare,
+        signConnection,
+        pierMpcSdk,
+      );
+      const btcWallet = new PierMpcBitcoinWallet(
+        keyShare,
+        "testnet",
+        signConnection,
+        pierMpcSdk,
+      );
+      return { ethWallet, btcWallet };
+    },
+  }).data;
+  const { btcWallet, ethWallet } = wallets || {
+    btcWallet: null,
+    ethWallet: null,
+  };
 
   async function establishConnection<T extends SessionKind>(sessionKind: T) {
     const { sessionId } = await api.createSession.mutate({
@@ -47,25 +79,8 @@ export default function App() {
         ),
       );
     const keyShare = await pierMpcSdk.generateKeyShare(connection);
-    const signConnection = await establishConnection(SessionKind.SIGN);
-    const ethWallet = new PierMpcEthereumWallet(
-      keyShare,
-      signConnection,
-      pierMpcSdk,
-    );
-    const btcWallet = new PierMpcBitcoinWallet(
-      keyShare,
-      "testnet",
-      signConnection,
-      pierMpcSdk,
-    );
-    console.log(
-      "local key share generated.",
-      ethWallet.address,
-      btcWallet.address.toString(),
-    );
-    setEthWallet(ethWallet);
-    setBtcWallet(btcWallet);
+    console.log("local key share generated.", keyShare.publicKey);
+    setKeyShare(keyShare);
   };
 
   const signMessageWithEth = async () => {
@@ -137,6 +152,14 @@ export default function App() {
         </p>
       }
       <button onClick={generateKeyShare}>Create wallet</button>
+      <button
+        onClick={() => {
+          setKeyShare(null);
+          window.location.reload(); // need to reload to kill 'SIGN' connection.
+        }}
+      >
+        Clear wallet
+      </button>
       <p>
         <button onClick={signMessageWithEth}>Sign message</button>
         ETH Signature: {ethSignature}
@@ -147,5 +170,14 @@ export default function App() {
         BTC tx hash: {btcTxHash}
       </p>
     </>
+  );
+}
+
+const queryClient = new QueryClient();
+export default function MyApp() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
   );
 }
