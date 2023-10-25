@@ -4,7 +4,7 @@ import { PierMpcEthereumWallet } from "@pier-wallet/mpc-lib/ethers-v5";
 import { createPierMpcSdkWasm } from "@pier-wallet/mpc-lib/wasm";
 import { ethers } from "ethers";
 import { useState } from "react";
-import { api } from "./trpc";
+import { api, supabase } from "./trpc";
 import {
   QueryClient,
   QueryClientProvider,
@@ -13,12 +13,24 @@ import {
 import { useLocalStorage } from "usehooks-ts";
 
 const supabaseTestUser = {
-  id: "11062eb7-60ad-493c-84b6-116bdda7a7c3",
   email: "mpc-lib-test@example.com",
   password: "123456",
 };
+const userAuthPromise = supabase.auth
+  .signInWithPassword(supabaseTestUser)
+  .then((res) => {
+    if (res.error) {
+      console.error(res.error);
+      return;
+    }
+    if (!res.data.user) {
+      console.error("no user data");
+      return;
+    }
+    console.log("supabase signed in", res.data.user?.id);
+  });
 const pierMpcSdk = createPierMpcSdkWasm({
-  credentials: supabaseTestUser,
+  supabase,
 });
 
 function App() {
@@ -57,6 +69,7 @@ function App() {
   };
 
   async function establishConnection<T extends SessionKind>(sessionKind: T) {
+    await userAuthPromise;
     const { sessionId } = await api.createSession.mutate({
       sessionKind,
     });

@@ -1,13 +1,12 @@
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
+export const supabase = createClient(
   "https://wnpphaccyjobbojjkvat.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InducHBoYWNjeWpvYmJvamprdmF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTIxMDU0MzAsImV4cCI6MjAwNzY4MTQzMH0.zZStzJDj_OGENGRX1a7bx-hjYt6ENdDZJbXlpHSwTDI",
 );
 
-const PIER_MPC_SERVER_HTTP_URL =
-  "https://mpc-server-7ca971e09088.herokuapp.com";
+const PIER_MPC_SERVER_HTTP_URL = "https://mpc.pierwallet.com";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const api: any = createTRPCProxyClient({
