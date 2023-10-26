@@ -536,17 +536,17 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@pier-wallet/mpc-ecdsa-wasm@^0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-ecdsa-wasm/-/mpc-ecdsa-wasm-0.1.6.tgz#e33ee7e8cfc0affd09f09fb4a4ffb51563cc2071"
-  integrity sha512-xLEbAElSBygxFeQaxTn+8DQNvtZfQy9htyg3RDBeGbL3CAWAjnYKOheYaMPgINMQS7d8Hlo3AdILW6tHg3iSeg==
+"@pier-wallet/mpc-ecdsa-wasm@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-ecdsa-wasm/-/mpc-ecdsa-wasm-0.2.0.tgz#0cf016419d45ca9db6ad971d615185f6e4320513"
+  integrity sha512-uo1NCMjdAc1xksXYjdO7JIkGdhdyPLzcpWbK94vwYgq8iIA/uXIiewi+IC+z3nELCXTR4vTsdt+dM6O/wSmXHw==
 
-"@pier-wallet/mpc-lib@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-lib/-/mpc-lib-0.3.0.tgz#844590ab14d679e32c71ad3c407886981829c6f9"
-  integrity sha512-bd+9g/PZeNf78kZOBS9Kg7XcwtikhZUUMQNOQ9h7haPNYxP7XeJcFd1b98iCIs2C6QfVngwxFK/7mdZjX+9vPw==
+"@pier-wallet/mpc-lib@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-lib/-/mpc-lib-0.3.2.tgz#e2599a7bb69e6aacc6a6ad8976e86a29da7d61cd"
+  integrity sha512-kiUBdO7AWP8knykk4tVrA4n7oIoUZFzCfOHXq4a8oj+uFsrwvlyb+sagnBnVxmTUwIr75shkIO/YwQMuuf+onA==
   dependencies:
-    "@pier-wallet/mpc-ecdsa-wasm" "^0.1.6"
+    "@pier-wallet/mpc-ecdsa-wasm" "0.2.0"
     bitcore-lib "^10.0.11"
     elliptic "^6.5.4"
     ethers "^5.7.0"
@@ -734,6 +734,11 @@
   version "7.0.13"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.13.tgz#02c24f4363176d2d18fc8b70b9f3c54aba178a85"
   integrity sha512-RbSSoHliUbnXj3ny0CNFOoxrIDV6SUGyStHsvDqosw6CkdPV8TtWGlfecuK4ToyMEAql6pzNxgCFKanovUzlgQ==
+
+"@types/lodash@^4.14.200":
+  version "4.14.200"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.200.tgz#435b6035c7eba9cdf1e039af8212c9e9281e7149"
+  integrity sha512-YI/M/4HRImtNf3pJgbF+W6FrXovqj+T+/HpENLTooK9PnkacBsDpeP3IpHab40CClUfhNmdM2WTNP2sa2dni5Q==
 
 "@types/node@*":
   version "20.8.4"

@@ -11,6 +11,7 @@ import {
   useQuery,
 } from "@tanstack/react-query";
 import { useLocalStorage } from "usehooks-ts";
+import { SendEthereumTransaction } from "./SendEthereumTransaction";
 
 const supabaseTestUser = {
   email: "mpc-lib-test@example.com",
@@ -32,8 +33,26 @@ const userAuthPromise = supabase.auth
 const pierMpcSdk = createPierMpcSdkWasm({
   supabase,
 });
+const ethereumProvider = new ethers.providers.JsonRpcProvider(
+  "https://eth-sepolia.g.alchemy.com/v2/BQ_nMljcV-AUx1EgSMzjSiFQLAlIUQvR",
+);
+
+function useAuthStatus() {
+  const [authStatus, setAuthStatus] = useState<
+    "loading" | "signedIn" | "signedOut"
+  >("loading");
+  supabase.auth.onAuthStateChange((event) => {
+    if (event === "SIGNED_IN") {
+      setAuthStatus("signedIn");
+    } else if (event === "SIGNED_OUT") {
+      setAuthStatus("signedOut");
+    }
+  });
+  return authStatus;
+}
 
 function App() {
+  const authStatus = useAuthStatus();
   const [keyShare, setKeyShare] = useLocalStorage<KeyShare | null>(
     "keyShare",
     null,
@@ -53,6 +72,7 @@ function App() {
         keyShare,
         signConnection,
         pierMpcSdk,
+        ethereumProvider,
       );
       const btcWallet = new PierMpcBitcoinWallet(
         keyShare,
@@ -82,16 +102,11 @@ function App() {
 
   const generateKeyShare = async () => {
     const connection = await establishConnection(SessionKind.KEYGEN);
-    api.generateKeyShare
-      .mutate({
-        sessionId: connection.sessionId,
-      })
-      .then((res: unknown) =>
-        console.log(
-          `server finished generating key share: "${JSON.stringify(res)}"`,
-        ),
-      );
-    const keyShare = await pierMpcSdk.generateKeyShare(connection);
+    const [serverResult, keyShare] = await Promise.all([
+      api.generateKeyShare.mutate({ sessionId: connection.sessionId }),
+      pierMpcSdk.generateKeyShare(connection),
+    ]);
+    console.log("server finished generating key share", serverResult);
     console.log("local key share generated.", keyShare.publicKey);
     setKeyShare(keyShare);
   };
@@ -103,9 +118,9 @@ function App() {
     }
 
     const message = "hello world";
-    api.signMessage
+    api.ethereum.signMessage
       .mutate({
-        publicKey: ethWallet.keyShare.publicKey,
+        publicKey: ethWallet.publicKey,
         message,
         sessionId: ethWallet.connection.sessionId,
       })
@@ -138,7 +153,7 @@ function App() {
     api.bitcoin.sendTransaction
       .mutate({
         sessionId: btcWallet.connection.sessionId,
-        publicKey: btcWallet.keyShare.publicKey,
+        publicKey: btcWallet.publicKey,
         transaction: tx.toObject(),
       })
       .then((res: unknown) =>
@@ -154,16 +169,15 @@ function App() {
   return (
     <>
       <h1>Pier Wallet MPC Demo</h1>
-      <h2>Step 1: Create connection & Join Session</h2>
-      {
-        <p>
-          Wallet addresses
-          <br />
-          ETH: {ethWallet?.address}
-          <br />
-          BTC: {btcWallet?.address.toString()}
-        </p>
-      }
+      <h2>Auth status: {authStatus}</h2>
+
+      <h2>Wallet addresses</h2>
+      <div>
+        ETH: {ethWallet?.address}
+        <br />
+        BTC: {btcWallet?.address.toString()}
+      </div>
+
       <button onClick={generateKeyShare}>Create wallet</button>
       <button
         onClick={() => {
@@ -173,10 +187,24 @@ function App() {
       >
         Clear wallet
       </button>
-      <p>
-        <button onClick={signMessageWithEth}>Sign message</button>
-        ETH Signature: {ethSignature}
-      </p>
+
+      <hr />
+
+      {ethWallet && (
+        <>
+          <div>
+            <h2>Sign Ethereum message</h2>
+            <button onClick={signMessageWithEth}>Sign message</button>
+            ETH Signature: {ethSignature}
+          </div>
+
+          <hr />
+
+          <SendEthereumTransaction wallet={ethWallet} />
+        </>
+      )}
+
+      <hr />
 
       <p>
         <button onClick={sendBitcoinTransaction}>Send BTC to faucet</button>
