@@ -541,10 +541,10 @@
   resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-ecdsa-wasm/-/mpc-ecdsa-wasm-0.2.0.tgz#0cf016419d45ca9db6ad971d615185f6e4320513"
   integrity sha512-uo1NCMjdAc1xksXYjdO7JIkGdhdyPLzcpWbK94vwYgq8iIA/uXIiewi+IC+z3nELCXTR4vTsdt+dM6O/wSmXHw==
 
-"@pier-wallet/mpc-lib@^0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-lib/-/mpc-lib-0.3.2.tgz#e2599a7bb69e6aacc6a6ad8976e86a29da7d61cd"
-  integrity sha512-kiUBdO7AWP8knykk4tVrA4n7oIoUZFzCfOHXq4a8oj+uFsrwvlyb+sagnBnVxmTUwIr75shkIO/YwQMuuf+onA==
+"@pier-wallet/mpc-lib@^0.3.5":
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-lib/-/mpc-lib-0.3.5.tgz#0ae759161940a01c65d5b305445c371f69d969c4"
+  integrity sha512-xtgeGyUinZ5Iah8p0FKf65ARKQuVvtmEWtWQCuPl59s7oRxmRxpJ32gE545Q47Kamv8btcmNKbZnVUi2Z6KmKA==
   dependencies:
     "@pier-wallet/mpc-ecdsa-wasm" "0.2.0"
     bitcore-lib "^10.0.11"

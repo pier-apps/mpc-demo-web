@@ -8,11 +8,14 @@ import _ from "lodash";
 export function SendEthereumTransaction({
   wallet,
 }: {
-  wallet: PierMpcEthereumWallet;
+  wallet: PierMpcEthereumWallet | null;
 }) {
   const balance = useQuery({
-    queryKey: ["balance", wallet.address.toLowerCase()],
+    queryKey: ["ethereum", "balance", wallet?.address.toLowerCase()],
     queryFn: async () => {
+      if (!wallet) {
+        return "";
+      }
       const balance = await wallet.getBalance();
       return `${ethers.utils.formatEther(balance)} ETH`;
     },
@@ -49,7 +52,13 @@ export function SendEthereumTransaction({
         </label>
         <br />
         <button
+          disabled={!wallet}
           onClick={async () => {
+            if (!wallet) {
+              console.error("no wallet");
+              return;
+            }
+
             try {
               ethers.utils.getAddress(receiver);
             } catch (e) {
@@ -63,11 +72,12 @@ export function SendEthereumTransaction({
               alert("Invalid amount");
               return;
             }
-            const txRequest = await wallet.populateTransaction({
-              to: receiver,
-              value: weiAmount,
-            });
             try {
+              setSendEthResult("");
+              const txRequest = await wallet.populateTransaction({
+                to: receiver,
+                value: weiAmount,
+              });
               const [serverResult, tx] = await Promise.all([
                 api.ethereum.signTransaction.mutate({
                   sessionId: wallet.connection.sessionId,

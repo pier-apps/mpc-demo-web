@@ -12,6 +12,7 @@ import {
 } from "@tanstack/react-query";
 import { useLocalStorage } from "usehooks-ts";
 import { SendEthereumTransaction } from "./SendEthereumTransaction";
+import { SendBitcoinTransaction } from "./SendBitcoinTransaction";
 
 const supabaseTestUser = {
   email: "mpc-lib-test@example.com",
@@ -59,7 +60,6 @@ function App() {
   );
 
   const [ethSignature, setEthSignature] = useState<string | null>(null);
-  const [btcTxHash, setBtcTxHash] = useState<string | null>(null);
 
   const wallets = useQuery({
     queryKey: ["keyShare", keyShare?.publicKey],
@@ -138,34 +138,6 @@ function App() {
     setEthSignature(signature);
   };
 
-  const sendBitcoinTransaction = async () => {
-    const faucetAddress = "tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6";
-
-    if (!btcWallet) {
-      console.error("wallet not generated");
-      return;
-    }
-    const tx = await btcWallet.createTransaction({
-      to: faucetAddress,
-      value: 800n,
-      feePerByte: 1n,
-    });
-    api.bitcoin.sendTransaction
-      .mutate({
-        sessionId: btcWallet.connection.sessionId,
-        publicKey: btcWallet.publicKey,
-        transaction: tx.toObject(),
-      })
-      .then((res: unknown) =>
-        console.log(
-          `server finished sending transaction: "${JSON.stringify(res)}"`,
-        ),
-      );
-    const hash = await btcWallet.sendTransaction(tx);
-    setBtcTxHash(hash);
-    console.log("btc hash", hash);
-  };
-
   return (
     <>
       <h1>Pier Wallet MPC Demo</h1>
@@ -180,6 +152,10 @@ function App() {
 
       <button onClick={generateKeyShare}>Create wallet</button>
       <button
+        style={{
+          backgroundColor: "red",
+          color: "white",
+        }}
         onClick={() => {
           setKeyShare(null);
           window.location.reload(); // need to reload to kill 'SIGN' connection.
@@ -190,26 +166,21 @@ function App() {
 
       <hr />
 
-      {ethWallet && (
-        <>
-          <div>
-            <h2>Sign Ethereum message</h2>
-            <button onClick={signMessageWithEth}>Sign message</button>
-            ETH Signature: {ethSignature}
-          </div>
-
-          <hr />
-
-          <SendEthereumTransaction wallet={ethWallet} />
-        </>
-      )}
+      <div>
+        <h2>Sign Ethereum message</h2>
+        <button disabled={!ethWallet} onClick={signMessageWithEth}>
+          Sign message
+        </button>
+        ETH Signature: {ethSignature}
+      </div>
 
       <hr />
 
-      <p>
-        <button onClick={sendBitcoinTransaction}>Send BTC to faucet</button>
-        BTC tx hash: {btcTxHash}
-      </p>
+      <SendEthereumTransaction wallet={ethWallet} />
+
+      <hr />
+
+      <SendBitcoinTransaction btcWallet={btcWallet} />
     </>
   );
 }
