@@ -80,6 +80,11 @@ export function SendBitcoinTransaction({
         ? `Error: ${balance.error.message}`
         : balance.data}
       <div>
+        <a href="https://bitcoinfaucet.uo1.net/send.php" target="_blank">
+          Fund wallet via a faucet
+        </a>
+      </div>
+      <div>
         <label>
           Receiver address:
           <input
