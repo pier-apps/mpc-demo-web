@@ -82,6 +82,12 @@ function App() {
       );
       return { ethWallet, btcWallet };
     },
+    refetchInterval: 0,
+    retry: false,
+    refetchIntervalInBackground: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
   }).data;
   const { btcWallet, ethWallet } = wallets || {
     btcWallet: null,
@@ -150,8 +156,11 @@ function App() {
         BTC: {btcWallet?.address.toString()}
       </div>
 
-      <button onClick={generateKeyShare}>Create wallet</button>
+      <button disabled={!!keyShare} onClick={generateKeyShare}>
+        Create wallet
+      </button>
       <button
+        disabled={!keyShare}
         style={{
           backgroundColor: "red",
           color: "white",

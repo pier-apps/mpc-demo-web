@@ -41,7 +41,7 @@ export function SendBitcoinTransaction({
       return;
     }
     const minSatoshi = 800n;
-    if (satoshis <= minSatoshi) {
+    if (satoshis < minSatoshi) {
       alert(`Amount must be greater than ${minSatoshi} satoshis`);
       return;
     }
@@ -103,7 +103,7 @@ export function SendBitcoinTransaction({
         </label>
         <br />
         <button onClick={sendBitcoinTransaction} disabled={!btcWallet}>
-          Send BTC to faucet
+          Send BTC
         </button>
         {sendBtcResult}
       </div>
