@@ -25,7 +25,7 @@ export function SendBitcoinTransaction({
   const [receiver, setReceiver] = useState(
     "tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6", // faucet
   );
-  const [btcAmount, setBtcAmount] = useState("");
+  const [btcAmount, setBtcAmount] = useState("0.000008");
 
   const sendBitcoinTransaction = async () => {
     if (!btcWallet) {
