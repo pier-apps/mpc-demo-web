@@ -1,5 +1,6 @@
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import { createClient } from "@supabase/supabase-js";
+import SuperJSON from "superjson";
 
 export const supabase = createClient(
   "https://wnpphaccyjobbojjkvat.supabase.co",
@@ -10,6 +11,7 @@ const PIER_MPC_SERVER_HTTP_URL = "https://mpc.pierwallet.com";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const api: any = createTRPCProxyClient({
+  transformer: new SuperJSON(),
   links: [
     httpBatchLink({
       url: `${PIER_MPC_SERVER_HTTP_URL}/trpc`,
