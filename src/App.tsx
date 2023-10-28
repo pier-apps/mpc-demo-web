@@ -1,9 +1,9 @@
-import { type KeyShare, SessionKind } from "@pier-wallet/mpc-lib";
+import { KeyShare, SessionKind, RawKeyShare } from "@pier-wallet/mpc-lib";
 import { PierMpcBitcoinWallet } from "@pier-wallet/mpc-lib/bitcoin";
 import { PierMpcEthereumWallet } from "@pier-wallet/mpc-lib/ethers-v5";
 import { createPierMpcSdkWasm } from "@pier-wallet/mpc-lib/wasm";
 import { ethers } from "ethers";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { api, supabase } from "./trpc";
 import {
   QueryClient,
@@ -54,15 +54,19 @@ function useAuthStatus() {
 
 function App() {
   const authStatus = useAuthStatus();
-  const [keyShare, setKeyShare] = useLocalStorage<KeyShare | null>(
+  const [rawKeyShare, setRawKeyShare] = useLocalStorage<RawKeyShare | null>(
     "keyShare",
     null,
+  );
+  const keyShare = useMemo(
+    () => (rawKeyShare ? new KeyShare(rawKeyShare) : null),
+    [rawKeyShare],
   );
 
   const [ethSignature, setEthSignature] = useState<string | null>(null);
 
   const wallets = useQuery({
-    queryKey: ["keyShare", keyShare?.publicKey],
+    queryKey: ["wallets", keyShare?.publicKey],
     queryFn: async () => {
       if (!keyShare) {
         return null;
@@ -114,7 +118,7 @@ function App() {
     ]);
     console.log("server finished generating key share", serverResult);
     console.log("local key share generated.", keyShare.publicKey);
-    setKeyShare(keyShare);
+    setRawKeyShare(keyShare.raw());
   };
 
   const signMessageWithEth = async () => {
@@ -166,7 +170,7 @@ function App() {
           color: "white",
         }}
         onClick={() => {
-          setKeyShare(null);
+          setRawKeyShare(null);
           window.location.reload(); // need to reload to kill 'SIGN' connection.
         }}
       >
