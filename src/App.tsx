@@ -171,10 +171,10 @@ function App() {
         }}
         onClick={() => {
           setRawKeyShare(null);
-          window.location.reload(); // need to reload to kill 'SIGN' connection.
+          window.location.reload(); // need to reload to kill 'SIGN' connection. Not needed with the latest version of the SDK probably
         }}
       >
-        Clear wallet
+        Delete wallet
       </button>
 
       <hr />
@@ -189,7 +189,7 @@ function App() {
 
       <hr />
 
-      <SendEthereumTransaction wallet={ethWallet} />
+      <SendEthereumTransaction ethWallet={ethWallet} />
 
       <hr />
 

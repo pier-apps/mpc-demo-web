@@ -6,17 +6,17 @@ import { useQuery } from "@tanstack/react-query";
 import _ from "lodash";
 
 export function SendEthereumTransaction({
-  wallet,
+  ethWallet,
 }: {
-  wallet: PierMpcEthereumWallet | null;
+  ethWallet: PierMpcEthereumWallet | null;
 }) {
   const balance = useQuery({
-    queryKey: ["ethereum", "balance", wallet?.address.toLowerCase()],
+    queryKey: ["ethereum", "balance", ethWallet?.address.toLowerCase()],
     queryFn: async () => {
-      if (!wallet) {
+      if (!ethWallet) {
         return "";
       }
-      const balance = await wallet.getBalance();
+      const balance = await ethWallet.getBalance();
       return `${ethers.utils.formatEther(balance)} ETH`;
     },
   });
@@ -52,9 +52,9 @@ export function SendEthereumTransaction({
         </label>
         <br />
         <button
-          disabled={!wallet}
+          disabled={!ethWallet}
           onClick={async () => {
-            if (!wallet) {
+            if (!ethWallet) {
               console.error("no wallet");
               return;
             }
@@ -74,19 +74,19 @@ export function SendEthereumTransaction({
             }
             try {
               setSendEthResult("");
-              const txRequest = await wallet.populateTransaction({
+              const txRequest = await ethWallet.populateTransaction({
                 to: receiver,
                 value: weiAmount,
               });
               const [serverResult, tx] = await Promise.all([
                 api.ethereum.signTransaction.mutate({
-                  sessionId: wallet.connection.sessionId,
-                  publicKey: wallet.publicKey,
+                  sessionId: ethWallet.connection.sessionId,
+                  publicKey: ethWallet.publicKey,
                   transaction: _.mapValues(txRequest, (v) =>
                     BigNumber.isBigNumber(v) ? v.toString() : v,
                   ),
                 }),
-                await wallet.sendTransaction(txRequest),
+                await ethWallet.sendTransaction(txRequest),
               ]);
               console.log("server finished sending transaction", serverResult);
               console.log("local transaction hash", tx.hash);
