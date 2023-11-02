@@ -1,10 +1,8 @@
 import { KeyShare, SessionKind, RawKeyShare } from "@pier-wallet/mpc-lib";
 import { PierMpcBitcoinWallet } from "@pier-wallet/mpc-lib/bitcoin";
 import { PierMpcEthereumWallet } from "@pier-wallet/mpc-lib/ethers-v5";
-import { createPierMpcSdkWasm } from "@pier-wallet/mpc-lib/wasm";
 import { ethers } from "ethers";
 import { useMemo, useState } from "react";
-import { api, supabase } from "./trpc";
 import {
   QueryClient,
   QueryClientProvider,
@@ -13,27 +11,18 @@ import {
 import { useLocalStorage } from "usehooks-ts";
 import { SendEthereumTransaction } from "./SendEthereumTransaction";
 import { SendBitcoinTransaction } from "./SendBitcoinTransaction";
+import { pierMpcSdk, pierMpcVaultSdk } from "./mpc";
 
 const supabaseTestUser = {
   email: "mpc-lib-test@example.com",
   password: "123456",
 };
-const userAuthPromise = supabase.auth
+const userAuthPromise = pierMpcSdk.auth
   .signInWithPassword(supabaseTestUser)
-  .then((res) => {
-    if (res.error) {
-      console.error(res.error);
-      return;
-    }
-    if (!res.data.user) {
-      console.error("no user data");
-      return;
-    }
-    console.log("supabase signed in", res.data.user?.id);
+  .then(() => {
+    console.log("supabase signed in");
   });
-const pierMpcSdk = createPierMpcSdkWasm({
-  supabase,
-});
+
 const ethereumProvider = new ethers.providers.JsonRpcProvider(
   "https://eth-sepolia.g.alchemy.com/v2/BQ_nMljcV-AUx1EgSMzjSiFQLAlIUQvR",
 );
@@ -42,7 +31,7 @@ function useAuthStatus() {
   const [authStatus, setAuthStatus] = useState<
     "loading" | "signedIn" | "signedOut"
   >("loading");
-  supabase.auth.onAuthStateChange((event) => {
+  pierMpcSdk.auth.supabase.auth.onAuthStateChange((event) => {
     if (event === "SIGNED_IN") {
       setAuthStatus("signedIn");
     } else if (event === "SIGNED_OUT") {
@@ -71,18 +60,21 @@ function App() {
       if (!keyShare) {
         return null;
       }
-      const signConnection = await establishConnection(SessionKind.SIGN);
+      await userAuthPromise;
+      const signConnection = await pierMpcVaultSdk.establishConnection(
+        SessionKind.SIGN,
+      );
       const ethWallet = new PierMpcEthereumWallet(
         keyShare,
         signConnection,
-        pierMpcSdk,
+        pierMpcVaultSdk,
         ethereumProvider,
       );
       const btcWallet = new PierMpcBitcoinWallet(
         keyShare,
         "testnet",
         signConnection,
-        pierMpcSdk,
+        pierMpcVaultSdk,
       );
       return { ethWallet, btcWallet };
     },
@@ -98,25 +90,8 @@ function App() {
     ethWallet: null,
   };
 
-  async function establishConnection<T extends SessionKind>(sessionKind: T) {
-    await userAuthPromise;
-    const { sessionId } = await api.createSession.mutate({
-      sessionKind,
-    });
-    const transport = await pierMpcSdk.establishConnection(sessionKind, {
-      type: "join",
-      sessionId,
-    });
-    return transport;
-  }
-
   const generateKeyShare = async () => {
-    const connection = await establishConnection(SessionKind.KEYGEN);
-    const [serverResult, keyShare] = await Promise.all([
-      api.generateKeyShare.mutate({ sessionId: connection.sessionId }),
-      pierMpcSdk.generateKeyShare(connection),
-    ]);
-    console.log("server finished generating key share", serverResult);
+    const keyShare = await pierMpcVaultSdk.generateKeyShare();
     console.log("local key share generated.", keyShare.publicKey);
     setRawKeyShare(keyShare.raw());
   };
@@ -128,13 +103,6 @@ function App() {
     }
 
     const message = "hello world";
-    api.ethereum.signMessage
-      .mutate({
-        publicKey: ethWallet.publicKey,
-        message,
-        sessionId: ethWallet.connection.sessionId,
-      })
-      .then(() => console.log("server finished signing message"));
     const signature = await ethWallet.signMessage(message);
     console.log(`local signature generated: ${signature}`);
     const recoveredAddress = ethers.utils.verifyMessage(message, signature);
@@ -171,7 +139,6 @@ function App() {
         }}
         onClick={() => {
           setRawKeyShare(null);
-          window.location.reload(); // need to reload to kill 'SIGN' connection. Not needed with the latest version of the SDK probably
         }}
       >
         Delete wallet

@@ -391,6 +391,11 @@
     "@ethersproject/logger" "^5.7.0"
     hash.js "1.1.7"
 
+"@ethersproject/shims@^5.7.0":
+  version "5.7.0"
+  resolved "https://registry.yarnpkg.com/@ethersproject/shims/-/shims-5.7.0.tgz#ee32e543418595774029c5ea6123ea8995e7e154"
+  integrity sha512-WeDptc6oAprov5CCN2LJ/6/+dC9gTonnkdAtLepm/7P5Z+3PRxS5NpfVWmOMs1yE4Vitl2cU8bOPWC0GvGSbVg==
+
 "@ethersproject/signing-key@5.7.0", "@ethersproject/signing-key@^5.7.0":
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/signing-key/-/signing-key-5.7.0.tgz#06b2df39411b00bc57c7c09b01d1e41cf1b16ab3"
@@ -555,17 +560,24 @@
   resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-ecdsa-wasm/-/mpc-ecdsa-wasm-0.2.0.tgz#0cf016419d45ca9db6ad971d615185f6e4320513"
   integrity sha512-uo1NCMjdAc1xksXYjdO7JIkGdhdyPLzcpWbK94vwYgq8iIA/uXIiewi+IC+z3nELCXTR4vTsdt+dM6O/wSmXHw==
 
-"@pier-wallet/mpc-lib@^0.5.3":
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-lib/-/mpc-lib-0.5.3.tgz#6f647b84f6fd5a29296e3f34e4816691e7dc920a"
-  integrity sha512-cQugkH4ti930oXZnDiXvcYEpZLUStgDQ/RGD2t4YooZtyiE+o0KI4pJVUQ3rywQ+HHEXMZqJQHEmquP3GZmlkA==
+"@pier-wallet/mpc-lib@^0.6.6":
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-lib/-/mpc-lib-0.6.6.tgz#ad37dbf3cba9d1ae19d701be6bd3cf3719326556"
+  integrity sha512-NmuPBLebvwqgCYH+I26bZ7QJFi8nOSbrHWPBSvfbNZ6MGkEZ7/9GYlF+wKHucnwWmmbpNFp1jj3UycsP1580wQ==
   dependencies:
+    "@ethersproject/shims" "^5.7.0"
     "@pier-wallet/bitcore-lib" "11.0.0-alpha.8"
     "@pier-wallet/mpc-ecdsa-wasm" "0.2.0"
+    "@supabase/supabase-js" "^2.0.0"
+    "@trpc/client" "^10.37.1"
+    "@trpc/server" "^10.37.1"
     elliptic "^6.5.4"
     ethers "^5.7.0"
     events "^3.3.0"
     lodash "^4.17.21"
+    react-native-get-random-values "^1.9.0"
+    react-native-webview "13.2.2"
+    superjson "^2.2.0"
     ts-essentials "^9.3.2"
     zod "^3.22.4"
 
@@ -597,10 +609,10 @@
   dependencies:
     "@supabase/node-fetch" "^2.6.14"
 
-"@supabase/realtime-js@^2.8.1":
-  version "2.8.1"
-  resolved "https://registry.yarnpkg.com/@supabase/realtime-js/-/realtime-js-2.8.1.tgz#d93864b399e53f8618fea164956b1f43a77e75d9"
-  integrity sha512-bka5U4OeoKMdorGMPjdF30cl8n8nbhn+I9H4iySKzbN45W6AGxi7xoODnxdq/QwaDGtVyTMVbU+GVWre0QCdtw==
+"@supabase/realtime-js@^2.8.4":
+  version "2.8.4"
+  resolved "https://registry.yarnpkg.com/@supabase/realtime-js/-/realtime-js-2.8.4.tgz#71de0874f38295ad1e780e0e6f3fbc6ae343e862"
+  integrity sha512-5C9slLTGikHnYmAnIBOaPogAgbcNY68vnIyE6GpqIKjHElVb6LIi4clwNcjHSj4z6szuvvzj8T/+ePEgGEGekw==
   dependencies:
     "@supabase/node-fetch" "^2.6.14"
     "@types/phoenix" "^1.5.4"
@@ -614,16 +626,16 @@
   dependencies:
     "@supabase/node-fetch" "^2.6.14"
 
-"@supabase/supabase-js@^2.38.2":
-  version "2.38.2"
-  resolved "https://registry.yarnpkg.com/@supabase/supabase-js/-/supabase-js-2.38.2.tgz#566038ad4bbbb940c4f6749dc8d6992319a12b7e"
-  integrity sha512-yOCi94oO5WVUBhQ890BvtT7J3p8spP47PMhn22YldIcDLEQWE6N6X2JzfWCLHktXw+oCYUJfQBuqYhyLHAKb0w==
+"@supabase/supabase-js@^2.0.0":
+  version "2.38.4"
+  resolved "https://registry.yarnpkg.com/@supabase/supabase-js/-/supabase-js-2.38.4.tgz#ca075f7aa5ad0e33cb39b0254053087c56323e4f"
+  integrity sha512-bYwxm/GosvRqOMIv6YP7qUTZWi/trgHtDWUEZDEmyRHW24d0JYIb1GOt6RaO2hsWlecn88DAJIpjoNbprocgRA==
   dependencies:
     "@supabase/functions-js" "^2.1.5"
     "@supabase/gotrue-js" "^2.56.0"
     "@supabase/node-fetch" "^2.6.14"
     "@supabase/postgrest-js" "^1.8.5"
-    "@supabase/realtime-js" "^2.8.1"
+    "@supabase/realtime-js" "^2.8.4"
     "@supabase/storage-js" "^2.5.4"
 
 "@swc/core-darwin-arm64@1.3.87":
@@ -711,15 +723,15 @@
   dependencies:
     "@tanstack/query-core" "5.0.5"
 
-"@trpc/client@10.37.1":
-  version "10.37.1"
-  resolved "https://registry.yarnpkg.com/@trpc/client/-/client-10.37.1.tgz#f841eb8974b882b959437bad54f4cf7fe9ea86fe"
-  integrity sha512-OSblNfeI0Z9ERn3usgLV2x63CwwPoNOHf1FQK85cOT7F8MNaWyEHoEv7tHUwNGJwyzKXmpU+ockZ0movzX3D0g==
+"@trpc/client@^10.37.1":
+  version "10.43.1"
+  resolved "https://registry.yarnpkg.com/@trpc/client/-/client-10.43.1.tgz#f6ab465d84c6d1add7e698fec3e4a50a09a6277c"
+  integrity sha512-pkPtbDS0ck/2WZo2cWaPV11NFMII2I/nzse1Ggs5Cr0YczsZk3Z0DM77Sfb9FTSjmccYfkEtumHqxfTj6fRbbg==
 
-"@trpc/server@10.37.1":
-  version "10.37.1"
-  resolved "https://registry.yarnpkg.com/@trpc/server/-/server-10.37.1.tgz#7867a1042d3d055177327151a5abbf07ca0930f0"
-  integrity sha512-r3VeA319/braYMBIzj+XLgLKQ9lJSVglvPvP9HUv4kr5w6Y5grQMxMcExhTiZWltE9bnSJHKtBBzHafOo7KC8A==
+"@trpc/server@^10.37.1":
+  version "10.43.1"
+  resolved "https://registry.yarnpkg.com/@trpc/server/-/server-10.43.1.tgz#5a263b6da5d4c5c66729d144872ff28190f1cd07"
+  integrity sha512-rKOSCpJOb1MdTyJFqdf3QNNESDfPkbP+yBOZBM2x6iIOS4VlCfJqxsaSrb3uLPR6s8Ni7DhTu+cu/q1r0xOGcw==
 
 "@types/json-schema@^7.0.12":
   version "7.0.13"
@@ -1235,6 +1247,11 @@ esbuild@^0.18.10:
     "@esbuild/win32-ia32" "0.18.20"
     "@esbuild/win32-x64" "0.18.20"
 
+escape-string-regexp@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-2.0.0.tgz#a30304e99daa32e23b2fd20f51babd07cffca344"
+  integrity sha512-UpzcLCXolUWcNu5HtVMHYdXJjArjsF9C0aNnquZYY4uW/Vu0miy5YoWvbV345HauVvcAUnpRuhMMcqTcGOY2+w==
+
 escape-string-regexp@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-4.0.0.tgz#14ba83a5d373e3d311e5afca29cf5bfad965bf34"
@@ -1386,6 +1403,11 @@ ext@^1.1.2:
   integrity sha512-6hxeJYaL110a9b5TEJSj0gojyHQAmA2ch5Os+ySCiA1QGdS697XWY1pzsrSjqA9LDEEgdB/KypIlR59RcLuHYw==
   dependencies:
     type "^2.7.2"
+
+fast-base64-decode@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/fast-base64-decode/-/fast-base64-decode-1.0.0.tgz#b434a0dd7d92b12b43f26819300d2dafb83ee418"
+  integrity sha512-qwaScUgUGBYeDNRnbc/KyllVU88Jk1pRHPStuF/lO7B0/RTRLj7U0lkdTAutlBblY08rwZDff6tNU9cjv6j//Q==
 
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
@@ -1639,6 +1661,13 @@ inherits@=2.0.1:
   resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.1.tgz#b17d08d326b4423e568eff719f91b0b1cbdf69f1"
   integrity sha512-8nWq2nLTAwd02jTqJExUYFSD/fKq6VH9Y/oG2accc/kdI0V98Bag8d5a4gi3XHz73rDWa2PvTtvcWYquKqSENA==
 
+invariant@2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
+  integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
+  dependencies:
+    loose-envify "^1.0.0"
+
 is-arguments@^1.0.4:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/is-arguments/-/is-arguments-1.1.1.tgz#15b3f88fda01f2a97fec84ca761a560f123efa9b"
@@ -1780,7 +1809,7 @@ lodash@^4.17.20, lodash@^4.17.21:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
-loose-envify@^1.1.0:
+loose-envify@^1.0.0, loose-envify@^1.1.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
   integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
@@ -2002,6 +2031,21 @@ react-dom@^18.2.0:
   dependencies:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
+
+react-native-get-random-values@^1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/react-native-get-random-values/-/react-native-get-random-values-1.9.0.tgz#6cb30511c406922e75fe73833dc1812a85bfb37e"
+  integrity sha512-+29IR2oxzxNVeaRwCqGZ9ABadzMI8SLTBidrIDXPOkKnm5+kEmLt34QKM4JV+d2usPErvKyS85le0OmGTHnyWQ==
+  dependencies:
+    fast-base64-decode "^1.0.0"
+
+react-native-webview@13.2.2:
+  version "13.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-13.2.2.tgz#06b04db8e1f4ed57a9dc92f4094aa0e41271b89b"
+  integrity sha512-uT70y2GUqQzaj2RwRb/QuKRdXeDjXM6oN3DdPqYQlOOMFTCT8r62fybyjVVRoik8io+KLa5KnmuSoS5B2O1BmA==
+  dependencies:
+    escape-string-regexp "2.0.0"
+    invariant "2.2.4"
 
 react@^18.2.0:
   version "18.2.0"

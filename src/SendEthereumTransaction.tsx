@@ -1,9 +1,7 @@
 import { PierMpcEthereumWallet } from "@pier-wallet/mpc-lib/ethers-v5";
 import { useState } from "react";
-import { api } from "./trpc";
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import { useQuery } from "@tanstack/react-query";
-import _ from "lodash";
 
 export function SendEthereumTransaction({
   ethWallet,
@@ -74,21 +72,10 @@ export function SendEthereumTransaction({
             }
             try {
               setSendEthResult("");
-              const txRequest = await ethWallet.populateTransaction({
+              const tx = await ethWallet.sendTransaction({
                 to: receiver,
                 value: weiAmount,
               });
-              const [serverResult, tx] = await Promise.all([
-                api.ethereum.signTransaction.mutate({
-                  sessionId: ethWallet.connection.sessionId,
-                  publicKey: ethWallet.publicKey,
-                  transaction: _.mapValues(txRequest, (v) =>
-                    BigNumber.isBigNumber(v) ? v.toString() : v,
-                  ),
-                }),
-                await ethWallet.sendTransaction(txRequest),
-              ]);
-              console.log("server finished sending transaction", serverResult);
               console.log("local transaction hash", tx.hash);
               setSendEthResult(`Transaction hash: ${tx.hash}`);
               // eslint-disable-next-line @typescript-eslint/no-explicit-any

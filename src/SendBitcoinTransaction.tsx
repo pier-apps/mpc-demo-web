@@ -1,5 +1,4 @@
 import { PierMpcBitcoinWallet } from "@pier-wallet/mpc-lib/bitcoin";
-import { api } from "./trpc";
 import { useState } from "react";
 import { ethers } from "ethers";
 import { useQuery } from "@tanstack/react-query";
@@ -46,22 +45,14 @@ export function SendBitcoinTransaction({
       return;
     }
 
+    setSendBtcResult("");
     try {
       const tx = await btcWallet.createTransaction({
         to: receiver,
         value: satoshis,
         feePerByte: 1n,
       });
-      setSendBtcResult("");
-      const [serverResult, hash] = await Promise.all([
-        api.bitcoin.sendTransaction.mutate({
-          sessionId: btcWallet.connection.sessionId,
-          publicKey: btcWallet.publicKey,
-          transaction: tx.toObject(),
-        }),
-        btcWallet.sendTransaction(tx),
-      ]);
-      console.log(`server finished sending transaction:`, serverResult);
+      const hash = await btcWallet.sendTransaction(tx);
       console.log("btc hash", hash);
       setSendBtcResult(`Tx hash: ${hash}`);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
