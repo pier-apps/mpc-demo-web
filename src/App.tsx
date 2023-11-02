@@ -1,5 +1,8 @@
 import { KeyShare, SessionKind, RawKeyShare } from "@pier-wallet/mpc-lib";
-import { PierMpcBitcoinWallet } from "@pier-wallet/mpc-lib/bitcoin";
+import {
+  PierMpcBitcoinWallet,
+  PierMpcBitcoinWalletNetwork,
+} from "@pier-wallet/mpc-lib/bitcoin";
 import { PierMpcEthereumWallet } from "@pier-wallet/mpc-lib/ethers-v5";
 import { ethers } from "ethers";
 import { useMemo, useState } from "react";
@@ -23,7 +26,7 @@ const userAuthPromise = pierMpcSdk.auth
     console.log("supabase signed in");
   });
 
-const ethereumProvider = new ethers.providers.JsonRpcProvider(
+const ethereumProvider = new ethers.providers.StaticJsonRpcProvider(
   "https://eth-sepolia.g.alchemy.com/v2/BQ_nMljcV-AUx1EgSMzjSiFQLAlIUQvR",
 );
 
@@ -72,7 +75,7 @@ function App() {
       );
       const btcWallet = new PierMpcBitcoinWallet(
         keyShare,
-        "testnet",
+        PierMpcBitcoinWalletNetwork.Testnet,
         signConnection,
         pierMpcVaultSdk,
       );
