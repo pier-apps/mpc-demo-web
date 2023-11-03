@@ -99,19 +99,23 @@ function App() {
     setRawKeyShare(keyShare.raw());
   };
 
+  const messageToSign = "hello world";
   const signMessageWithEth = async () => {
     if (!ethWallet) {
       console.error("wallet not generated");
       return;
     }
 
-    const message = "hello world";
-    const signature = await ethWallet.signMessage(message);
+    setEthSignature(null);
+    const signature = await ethWallet.signMessage(messageToSign);
     console.log(`local signature generated: ${signature}`);
-    const recoveredAddress = ethers.utils.verifyMessage(message, signature);
+    const recoveredAddress = ethers.utils.verifyMessage(
+      messageToSign,
+      signature,
+    );
     console.log(
       "signature verification:",
-      message,
+      messageToSign,
       recoveredAddress,
       ethWallet.address,
       recoveredAddress.toLowerCase() === ethWallet.address.toLowerCase(),
@@ -149,21 +153,22 @@ function App() {
 
       <hr />
 
-      <div>
-        <h2>Sign Ethereum message</h2>
-        <button disabled={!ethWallet} onClick={signMessageWithEth}>
-          Sign message
-        </button>
-        ETH Signature: {ethSignature}
-      </div>
-
-      <hr />
-
       <SendEthereumTransaction ethWallet={ethWallet} />
 
       <hr />
 
       <SendBitcoinTransaction btcWallet={btcWallet} />
+
+      <hr />
+
+      <div>
+        <h2>Sign Ethereum message</h2>
+        <input value={messageToSign} readOnly disabled />
+        <button disabled={!ethWallet} onClick={signMessageWithEth}>
+          Sign message
+        </button>
+        ETH Signature: {ethSignature}
+      </div>
     </>
   );
 }
