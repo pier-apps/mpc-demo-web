@@ -3,7 +3,7 @@ import { useStoredKeyShare } from "../helpers";
 import { pierMpc } from "../mpc";
 
 export default function Mpc2of2() {
-  const { keyShare, storeKeyShare } = useStoredKeyShare("2of2-main");
+  const { keyShare, storeKeyShare } = useStoredKeyShare("2Of2-main");
   const generateKeyShare = async () => {
     const keyShare = await pierMpc.generateKeyShare2Of2();
     console.log("local key share generated.", keyShare.publicKey);

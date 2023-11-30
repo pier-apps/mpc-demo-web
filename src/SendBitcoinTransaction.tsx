@@ -1,7 +1,7 @@
 import { PierMpcBitcoinWallet } from "@pier-wallet/mpc-lib/bitcoin";
-import { useState } from "react";
-import { ethers } from "ethers";
 import { useQuery } from "@tanstack/react-query";
+import { ethers } from "ethers";
+import { useState } from "react";
 
 export const BTC_DECIMALS = 8;
 
@@ -68,8 +68,8 @@ export function SendBitcoinTransaction({
       {balance.isLoading
         ? "Loading..."
         : balance.isError
-        ? `Error: ${balance.error.message}`
-        : balance.data}
+          ? `Error: ${balance.error.message}`
+          : balance.data}
       <div>
         <a href="https://bitcoinfaucet.uo1.net/send.php" target="_blank">
           Fund wallet via a faucet

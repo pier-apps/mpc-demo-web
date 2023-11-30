@@ -1,7 +1,7 @@
 import { PierMpcEthereumWallet } from "@pier-wallet/mpc-lib/ethers-v5";
-import { useState } from "react";
-import { ethers } from "ethers";
 import { useQuery } from "@tanstack/react-query";
+import { ethers } from "ethers";
+import { useState } from "react";
 
 export function SendEthereumTransaction({
   ethWallet,
@@ -19,7 +19,7 @@ export function SendEthereumTransaction({
     },
   });
   const [receiver, setReceiver] = useState("");
-  const [ethAmount, setEthAmount] = useState("");
+  const [ethAmount, setEthAmount] = useState("0.0001");
   const [sendEthResult, setSendEthResult] = useState("");
 
   return (
@@ -29,8 +29,8 @@ export function SendEthereumTransaction({
       {balance.isLoading
         ? "Loading..."
         : balance.isError
-        ? `Error: ${balance.error.message}`
-        : balance.data}
+          ? `Error: ${balance.error.message}`
+          : balance.data}
       <div>
         <a href="https://sepoliafaucet.com/" target="_blank">
           Fund wallet via a Sepolia faucet
