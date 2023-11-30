@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@pier-wallet/mpc-lib": "^0.6.6",
+    "@pier-wallet/mpc-lib": "^0.7.0",
     "@tanstack/react-query": "^5.0.5",
     "ethers": "^5.7.0",
     "lodash": "^4.17.21",

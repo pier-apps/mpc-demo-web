@@ -32,6 +32,11 @@ export function SendEthereumTransaction({
         ? `Error: ${balance.error.message}`
         : balance.data}
       <div>
+        <a href="https://sepoliafaucet.com/" target="_blank">
+          Fund wallet via a Sepolia faucet
+        </a>
+      </div>
+      <div>
         <label>
           Receiver address:
           <input

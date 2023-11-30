@@ -14,16 +14,17 @@ import {
 import { useLocalStorage } from "usehooks-ts";
 import { SendEthereumTransaction } from "./SendEthereumTransaction";
 import { SendBitcoinTransaction } from "./SendBitcoinTransaction";
-import { pierMpcSdk, pierMpcVaultSdk } from "./mpc";
+import { pierMpc } from "./mpc";
+import { SignEthereumMessage } from "./SignEthereumMessage";
 
-const supabaseTestUser = {
+const testCredentials = {
   email: "mpc-lib-test@example.com",
   password: "123456",
 };
-const userAuthPromise = pierMpcSdk.auth
-  .signInWithPassword(supabaseTestUser)
+const userAuthPromise = pierMpc.auth
+  .signInWithPassword(testCredentials)
   .then(() => {
-    console.log("supabase signed in");
+    console.log("signed in");
   });
 
 const ethereumProvider = new ethers.providers.StaticJsonRpcProvider(
@@ -34,7 +35,7 @@ function useAuthStatus() {
   const [authStatus, setAuthStatus] = useState<
     "loading" | "signedIn" | "signedOut"
   >("loading");
-  pierMpcSdk.auth.supabase.auth.onAuthStateChange((event) => {
+  pierMpc.auth.supabase.auth.onAuthStateChange((event) => {
     if (event === "SIGNED_IN") {
       setAuthStatus("signedIn");
     } else if (event === "SIGNED_OUT") {
@@ -55,8 +56,6 @@ function App() {
     [rawKeyShare],
   );
 
-  const [ethSignature, setEthSignature] = useState<string | null>(null);
-
   const wallets = useQuery({
     queryKey: ["wallets", keyShare?.publicKey],
     queryFn: async () => {
@@ -64,20 +63,21 @@ function App() {
         return null;
       }
       await userAuthPromise;
-      const signConnection = await pierMpcVaultSdk.establishConnection(
+      const signConnection = await pierMpc.establishConnection(
         SessionKind.SIGN,
+        keyShare.partiesParameters,
       );
       const ethWallet = new PierMpcEthereumWallet(
         keyShare,
         signConnection,
-        pierMpcVaultSdk,
+        pierMpc,
         ethereumProvider,
       );
       const btcWallet = new PierMpcBitcoinWallet(
         keyShare,
         PierMpcBitcoinWalletNetwork.Testnet,
         signConnection,
-        pierMpcVaultSdk,
+        pierMpc,
       );
       return { ethWallet, btcWallet };
     },
@@ -94,35 +94,12 @@ function App() {
   };
 
   const generateKeyShare = async () => {
-    const keyShare = await pierMpcVaultSdk.generateKeyShare();
+    const keyShare = await pierMpc.generateKeyShare2Of2();
     console.log("local key share generated.", keyShare.publicKey);
     setRawKeyShare(keyShare.raw());
   };
 
-  const messageToSign = "hello world";
-  const signMessageWithEth = async () => {
-    if (!ethWallet) {
-      console.error("wallet not generated");
-      return;
-    }
-
-    setEthSignature(null);
-    const signature = await ethWallet.signMessage(messageToSign);
-    console.log(`local signature generated: ${signature}`);
-    const recoveredAddress = ethers.utils.verifyMessage(
-      messageToSign,
-      signature,
-    );
-    console.log(
-      "signature verification:",
-      messageToSign,
-      recoveredAddress,
-      ethWallet.address,
-      recoveredAddress.toLowerCase() === ethWallet.address.toLowerCase(),
-    );
-    setEthSignature(signature);
-  };
-
+  const walletLoadingText = keyShare ? "loading..." : "not generated";
   return (
     <>
       <h1>Pier Wallet MPC Demo</h1>
@@ -130,9 +107,9 @@ function App() {
 
       <h2>Wallet addresses</h2>
       <div>
-        ETH: {ethWallet?.address}
+        ETH: {ethWallet?.address || walletLoadingText}
         <br />
-        BTC: {btcWallet?.address.toString()}
+        BTC: {btcWallet?.address || walletLoadingText}
       </div>
 
       <button disabled={!!keyShare} onClick={generateKeyShare}>
@@ -161,14 +138,7 @@ function App() {
 
       <hr />
 
-      <div>
-        <h2>Sign Ethereum message</h2>
-        <input value={messageToSign} readOnly disabled />
-        <button disabled={!ethWallet} onClick={signMessageWithEth}>
-          Sign message
-        </button>
-        ETH Signature: {ethSignature}
-      </div>
+      <SignEthereumMessage ethWallet={ethWallet} />
     </>
   );
 }

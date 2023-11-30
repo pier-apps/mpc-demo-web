@@ -555,26 +555,28 @@
     randombytes "^2.1.0"
     url "^0.11.3"
 
-"@pier-wallet/mpc-ecdsa-wasm@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-ecdsa-wasm/-/mpc-ecdsa-wasm-0.2.0.tgz#0cf016419d45ca9db6ad971d615185f6e4320513"
-  integrity sha512-uo1NCMjdAc1xksXYjdO7JIkGdhdyPLzcpWbK94vwYgq8iIA/uXIiewi+IC+z3nELCXTR4vTsdt+dM6O/wSmXHw==
+"@pier-wallet/mpc-ecdsa-wasm@0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-ecdsa-wasm/-/mpc-ecdsa-wasm-0.2.2.tgz#98a37d213221c61bb4750ea27683fed8f0fc956b"
+  integrity sha512-kjcBMfjpJvWx2uzh9LdVlxFTj4NMAA8dgdIz1DrxrkudJt+Yx2Ish+4+MpLg0Hc300cvpTROdpQVy9bS5j2Y1g==
 
-"@pier-wallet/mpc-lib@^0.6.6":
-  version "0.6.6"
-  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-lib/-/mpc-lib-0.6.6.tgz#ad37dbf3cba9d1ae19d701be6bd3cf3719326556"
-  integrity sha512-NmuPBLebvwqgCYH+I26bZ7QJFi8nOSbrHWPBSvfbNZ6MGkEZ7/9GYlF+wKHucnwWmmbpNFp1jj3UycsP1580wQ==
+"@pier-wallet/mpc-lib@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@pier-wallet/mpc-lib/-/mpc-lib-0.7.0.tgz#a78f603a009698a5672bd35468f71c3e21555dba"
+  integrity sha512-4SP6QQhDURU96Q43xxaeRDVHEh0i8rx5hbUZFSd4VLP0hY05YxzKHy+Vr/JM9A5a5BQGYFSixPdrSDanuEVFjw==
   dependencies:
     "@ethersproject/shims" "^5.7.0"
     "@pier-wallet/bitcore-lib" "11.0.0-alpha.8"
-    "@pier-wallet/mpc-ecdsa-wasm" "0.2.0"
+    "@pier-wallet/mpc-ecdsa-wasm" "0.2.2"
     "@supabase/supabase-js" "^2.0.0"
     "@trpc/client" "^10.37.1"
     "@trpc/server" "^10.37.1"
+    buffer "^6.0.3"
     elliptic "^6.5.4"
     ethers "^5.7.0"
     events "^3.3.0"
     lodash "^4.17.21"
+    lru_map "^0.4.1"
     react-native-get-random-values "^1.9.0"
     react-native-webview "13.2.2"
     superjson "^2.2.0"
@@ -1822,6 +1824,11 @@ lru-cache@^6.0.0:
   integrity sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==
   dependencies:
     yallist "^4.0.0"
+
+lru_map@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/lru_map/-/lru_map-0.4.1.tgz#f7b4046283c79fb7370c36f8fca6aee4324b0a98"
+  integrity sha512-I+lBvqMMFfqaV8CJCISjI3wbjmwVu/VyOoU7+qtu9d7ioW5klMgsTTiUOUp+DJvfTTzKXoPbyC6YfgkNcyPSOg==
 
 merge2@^1.3.0, merge2@^1.4.1:
   version "1.4.1"
