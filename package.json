@@ -10,12 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@generouted/react-router": "^1.16.1",
     "@pier-wallet/mpc-lib": "^0.7.0",
     "@tanstack/react-query": "^5.0.5",
     "ethers": "^5.7.0",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.0",
+    "ts-essentials": "^9.4.1",
     "usehooks-ts": "^2.9.1"
   },
   "devDependencies": {
@@ -28,6 +31,8 @@
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "prettier": "^3.1.0",
+    "prettier-plugin-organize-imports": "^3.2.4",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
   }
