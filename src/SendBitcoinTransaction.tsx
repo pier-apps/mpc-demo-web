@@ -47,14 +47,14 @@ export function SendBitcoinTransaction({
 
     setSendBtcResult("");
     try {
-      const tx = await btcWallet.createTransaction({
+      const txRequest = await btcWallet.populateTransaction({
         to: receiver,
         value: satoshis,
         feePerByte: 1n,
       });
-      const hash = await btcWallet.sendTransaction(tx);
-      console.log("btc hash", hash);
-      setSendBtcResult(`Tx hash: ${hash}`);
+      const tx = await btcWallet.sendTransaction(txRequest);
+      console.log("btc hash", tx.hash);
+      setSendBtcResult(`Tx hash: ${tx.hash}`);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       console.error(e);
